@@ -6,15 +6,14 @@ import pyautogui
 from PIL import Image
 from MinesweeperGrid import *
 
-BOARD_WIDTH = CELL_WIDTH * GRID_WIDTH + 2 * OUTSIDE_BORDER
-
+BOARD_WIDTH = CELL_WIDTH * GRID_WIDTH[DIFFICULTY] + 2 * OUTSIDE_BORDER
 
 happy_face = pyautogui.locateOnScreen("img/happy_face.png")
 dead_face = pyautogui.locateOnScreen("img/dead_face.png")
 face_x,face_y, face_w, face_h = dead_face if happy_face is None else happy_face
-  
-BOARD_START_X =  face_x - 459
-BOARD_START_Y = face_y + 69
+
+BOARD_START_X =  face_x - DELTA_X[DIFFICULTY]
+BOARD_START_Y = face_y + DELTA_Y[DIFFICULTY]
 
 def coordToScreen(row, col):
     (x, y) = boardToCoord(row, col)
@@ -22,7 +21,7 @@ def coordToScreen(row, col):
 
 
 def boardRegion():
-    return (BOARD_START_X, BOARD_START_Y, (CELL_WIDTH) * GRID_WIDTH, (CELL_WIDTH) * GRID_HEIGHT)
+    return (BOARD_START_X, BOARD_START_Y, (CELL_WIDTH) * GRID_WIDTH[DIFFICULTY], (CELL_WIDTH) * GRID_HEIGHT[DIFFICULTY])
 
 
 def boardToCoord(row, col):

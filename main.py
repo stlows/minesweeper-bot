@@ -7,13 +7,10 @@ import numpy as np
 from constants import *
 import ui
 
-mines_left = 99
+mines_left = MINES[DIFFICULTY]
 
 def game_loop(depth=1):
   global mines_left
-  if mines_left == 0:
-    print("No more mines to find")
-    return False
   if depth > 120:
     print("120 calls, we stop")
     return False
@@ -35,12 +32,18 @@ def game_loop(depth=1):
     if(find[1] == "flag"):
       ui.flag(find[0])
       mines_left = mines_left - 1
-    return game_loop(depth+1)
-  for open in openable:
-    ui.open(open)
-  for flag in flaggable:
-    ui.flag(flag)
-    mines_left = mines_left - 1
+  else:
+    for open in openable:
+      ui.open(open)
+    for flag in flaggable:
+      ui.flag(flag)
+      mines_left = mines_left - 1
+  if mines_left == 0:
+    print("No more mines to find, opening all unopened tiles.")
+    board = ui.loadBoard()
+    for open in board.all_unopened(board.tiles):
+      ui.open(open)
+    return False
   return game_loop(depth+1)
 
 def random():
@@ -58,11 +61,14 @@ def random():
 
 pyautogui.PAUSE = 0.01
 
-def start_game():
+def start_game(nofirstclick=False):
+
   dead_face = pyautogui.locateOnScreen("img/dead_face.png")
   if dead_face is not None:
     pyautogui.click(pyautogui.center(dead_face))
-  first = (GRID_HEIGHT/2,GRID_WIDTH/2,0)
+  if nofirstclick:
+    return game_loop()
+  first = (GRID_HEIGHT[DIFFICULTY]/2,GRID_WIDTH[DIFFICULTY]/2,0)
   ui.open(first)
   time.sleep(0.05)
   board = pyautogui.screenshot(region=ui.boardRegion())
@@ -72,9 +78,10 @@ def start_game():
     game_loop()
 
 start_game()
+
 # python -m cProfile -s time main.py > log.txt
 
-#board = pyautogui.screenshot("img/temp.png",region=ui.boardRegion())
+#board = pyautogui.screenshot("img/temp_" + str(DIFFICULTY) + ".png",region=ui.boardRegion())
 #match = ui.match(board, 8, 28, withlog=True)
 #print(match)
 

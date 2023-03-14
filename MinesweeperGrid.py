@@ -117,12 +117,15 @@ class MinesweeperGrid:
         return neighbours
 
     def toTilesArray(self, tiles):
-      return [[(row, col, tiles[row,col]) for col in range(0, GRID_WIDTH)] for row in range(0, GRID_HEIGHT)]
+      return [[(row, col, tiles[row,col]) for col in range(0, GRID_WIDTH[DIFFICULTY])] for row in range(0, GRID_HEIGHT[DIFFICULTY])]
+
+    def all_unopened(self, tiles):
+      return [(row, col, tiles[row,col]) for col in range(0, GRID_WIDTH[DIFFICULTY]) for row in range(0, GRID_HEIGHT[DIFFICULTY]) if tiles[row,col] == 0]
 
     def __init__(self, im):
-        tiles = np.zeros((GRID_HEIGHT, GRID_WIDTH))
-        for y in range(0, GRID_HEIGHT):
-            for x in range(0, GRID_WIDTH):
+        tiles = np.zeros((GRID_HEIGHT[DIFFICULTY], GRID_WIDTH[DIFFICULTY]))
+        for y in range(0, GRID_HEIGHT[DIFFICULTY]):
+            for x in range(0, GRID_WIDTH[DIFFICULTY]):
                 match = ui.match(im, y, x)
                 tiles[y][x] = match
         self.tiles = tiles
