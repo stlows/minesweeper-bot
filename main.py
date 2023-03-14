@@ -7,7 +7,13 @@ import numpy as np
 from constants import *
 import ui
 
+mines_left = 99
+
 def game_loop(depth=1):
+  global mines_left
+  if mines_left == 0:
+    print("No more mines to find")
+    return False
   if depth > 120:
     print("120 calls, we stop")
     return False
@@ -28,11 +34,13 @@ def game_loop(depth=1):
       ui.open(find[0])
     if(find[1] == "flag"):
       ui.flag(find[0])
+      mines_left = mines_left - 1
     return game_loop(depth+1)
   for open in openable:
     ui.open(open)
   for flag in flaggable:
     ui.flag(flag)
+    mines_left = mines_left - 1
   return game_loop(depth+1)
 
 def random():
@@ -41,9 +49,9 @@ def random():
   #print("Opening: ", random, " Chance of bomb: ", perc_of_bomb)
   ui.open(random)
   time.sleep(0.01)
-  board = pyautogui.screenshot(region=ui.boardRegion())
-  match = ui.match(board, random[0], random[1])
-  #print("It was a:", match)
+  board = pyautogui.screenshot("img/random.png", region=ui.boardRegion())
+  match = ui.match(board, random[0], random[1], withlog=False)
+  print("Random Time ! It was a:", match, random)
   if match == -10:
     return False
   return True
@@ -51,18 +59,26 @@ def random():
 pyautogui.PAUSE = 0.01
 
 def start_game():
+  dead_face = pyautogui.locateOnScreen("img/dead_face.png")
+  if dead_face is not None:
+    pyautogui.click(pyautogui.center(dead_face))
   first = (GRID_HEIGHT/2,GRID_WIDTH/2,0)
   ui.open(first)
+  time.sleep(0.05)
   board = pyautogui.screenshot(region=ui.boardRegion())
+  time.sleep(0.05)
   match = ui.match(board, first[0], first[1])
   if match != -10:
     game_loop()
-  
 
 start_game()
 # python -m cProfile -s time main.py > log.txt
 
-# board = pyautogui.screenshot("img/temp.png",region=ui.boardRegion())
-# match = ui.match(board, 2, 29)
-# print(match)
+#board = pyautogui.screenshot("img/temp.png",region=ui.boardRegion())
+#match = ui.match(board, 8, 28, withlog=True)
+#print(match)
+
+# dead_face = pyautogui.locateOnScreen("img/dead_face.png")
+# if dead_face is not None:
+#   pyautogui.click(pyautogui.center(dead_face))
 

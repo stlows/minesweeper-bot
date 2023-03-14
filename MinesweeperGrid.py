@@ -67,10 +67,11 @@ class MinesweeperGrid:
                   unopened_around = [x for x in neighbours if x[2] == 0]
                   flags_around = [x for x in neighbours if x[2] == -2]
                   remaining = self.tiles[row, col] - len(flags_around)
-                  new_percentage = remaining / len(unopened_around)
-                  if new_percentage < percentage:
-                    percentage = new_percentage
-                    openable = unopened_around[0]
+                  if len(unopened_around) > 0:
+                    new_percentage = remaining / len(unopened_around)
+                    if new_percentage > 0 and new_percentage < percentage:
+                      percentage = new_percentage
+                      openable = unopened_around[0]
       return (openable, percentage)
 
     def level_1_find(self, tiles):
@@ -88,7 +89,8 @@ class MinesweeperGrid:
                 openable.extend([x for x in unopened_around if x not in openable])
               if(len(flags_around) + len(unopened_around) == value and len(unopened_around) > 0):
                 flaggable.extend([x for x in unopened_around if x not in flaggable])
-        return openable,flaggable
+        
+        return set(openable),set(flaggable)
 
     def get_neighbours_values_list(self, tiles, row, col):
         return np.array(self.get_neighbours(tiles, row, col))[:, 2].tolist()

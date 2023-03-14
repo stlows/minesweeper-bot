@@ -7,10 +7,14 @@ from PIL import Image
 from MinesweeperGrid import *
 
 BOARD_WIDTH = CELL_WIDTH * GRID_WIDTH + 2 * OUTSIDE_BORDER
-SCREEN_WIDTH = 1920
 
-BOARD_START_X = (SCREEN_WIDTH - BOARD_WIDTH) / 2 + 10 # 471
-BOARD_START_Y = 204
+
+happy_face = pyautogui.locateOnScreen("img/happy_face.png")
+dead_face = pyautogui.locateOnScreen("img/dead_face.png")
+face_x,face_y, face_w, face_h = dead_face if happy_face is None else happy_face
+  
+BOARD_START_X =  face_x - 459
+BOARD_START_Y = face_y + 69
 
 def coordToScreen(row, col):
     (x, y) = boardToCoord(row, col)
@@ -41,12 +45,13 @@ def open(tile):
   pyautogui.click(pyautogui.center(coord))
 
 
-def match(im, row, col):
+def match(im, row, col, withlog = False):
     (x, y) = boardToCoord(row, col)
     pixel_of_interest_1 = im.getpixel((x + 10, y + 23))
     pixel_of_interest_2 = im.getpixel((x, y))
     pixel_of_interest_3 = im.getpixel((x + 12, y + 13))
-    #print(pixel_of_interest_1, pixel_of_interest_2, pixel_of_interest_3)
+    if withlog:
+      print(pixel_of_interest_1, pixel_of_interest_2, pixel_of_interest_3)
     if pixel_of_interest_1 == BLACK and pixel_of_interest_2 == RED:
         return -10
     if pixel_of_interest_1 == BLUE:
