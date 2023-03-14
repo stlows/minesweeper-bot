@@ -40,9 +40,9 @@ def game_loop(depth=1):
       mines_left = mines_left - 1
   if mines_left == 0:
     print("No more mines to find, opening all unopened tiles.")
-    board = ui.loadBoard()
-    for open in board.all_unopened(board.tiles):
-      ui.open(open)
+    # board = ui.loadBoard()
+    # for open in board.all_unopened(board.tiles):
+    #   ui.open(open)
     return False
   return game_loop(depth+1)
 
@@ -77,7 +77,7 @@ def start_game(nofirstclick=False):
   if match != -10:
     game_loop()
 
-start_game()
+start_game(nofirstclick=False)
 
 # python -m cProfile -s time main.py > log.txt
 

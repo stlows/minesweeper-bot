@@ -1,5 +1,5 @@
 # DIFFICULTY
-DIFFICULTY = 0 # 0: Beginner, 1: Intermediate, 2: Hard
+DIFFICULTY = 2 # 0: Beginner, 1: Intermediate, 2: Hard
 MINES = [10,40,99]
 DELTA_X = [123,235,459]
 DELTA_Y = [69,69,69]
